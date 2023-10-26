@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+    <title>Game of Life</title>
+    <style>
+    .grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .cell {
+        width: 18px;
+        height: 18px;
+        border-width: 1px;
+        border-style: solid;
+    }
+    .alive {
+        background-color: black;
+    }
+    </style>
+    <script src="./index.js" type="module"></script>
+    <script type="module">
+        import { tick } from "./index.js";
+        // let grid = Array(25*25).fill(0);
+        let grid =  [0,1,0,0
+         ,0,0,0,1
+         ,1,1,1,1
+         ,1,0,1,0];
+        const width = Math.sqrt(grid.length);
+
+        const root = document.getElementById("root");
+        const tickButton = document.getElementById("ticker");
+
+        updateGrid();
+
+        function updateGrid() {
+            const cellSize = 20;
+            let htmlGrid = `<div class="grid" style="width:${cellSize*width}px">`;
+            for (let i = 0; i < grid.length; i++) {
+                htmlGrid += `<div class="cell ${grid[i] && 'alive'}"></div>`
+            }
+            htmlGrid += "</div>";
+            root.innerHTML = htmlGrid;
+        }
+
+        tickButton.onclick = function handleTick() {
+            grid = tick(grid);
+            updateGrid();
+        }
+    </script>
+</head>
+    <body>
+        <div id="root"></div>
+        <button id="ticker">Tick</button>
+    </body>
+</html>
