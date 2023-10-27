@@ -24,6 +24,7 @@
         let playingInterval;
 
         const root = document.getElementById("root");
+        const generateButton = document.getElementById("generate");
         const playButton = document.getElementById("play");
         const pauseButton = document.getElementById("pause");
         const tickButton = document.getElementById("ticker");
@@ -31,13 +32,16 @@
 
         rerender();
 
+        generateButton.onclick = handleGenerate;
         playButton.onclick = handlePlay;
         pauseButton.onclick = handlePause;
         tickButton.onclick = handleTick;
-        widthElem.onchange = handleCellClick;
+        widthElem.onchange = handleWidthChange;
 
-        function handleTick() {
-            grid = tick(grid)
+        function handleGenerate() {
+            for (let i = 0; i < grid.length; i++) {
+                grid[i] = Math.round(Math.random());
+            }
             rerender();
         }
 
@@ -51,6 +55,11 @@
                 clearInterval(playingInterval);
                 playingInterval = undefined;
             }
+        }
+
+        function handleTick() {
+            grid = tick(grid)
+            rerender();
         }
 
         function handleWidthChange(e) {
@@ -80,6 +89,7 @@
     </script>
 </head>
     <body>
+        <button id="generate">Generate</button>
         <button id="play">Play</button>
         <button id="pause">Pause</button>
         <button id="ticker">Tick</button>
