@@ -1,4 +1,4 @@
-import { tick } from './index.js';
+import { tick } from './logic.js';
 
 test();
 

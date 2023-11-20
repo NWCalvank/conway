@@ -1,4 +1,4 @@
-import { tick } from "./index.js";
+import { tick } from "./logic.js";
 
 const template = document.createElement('template');
 
@@ -23,7 +23,7 @@ template.innerHTML = `
 <button id="pause">Pause</button>
 <button id="ticker">Tick</button>
 <input id="width" type="number"></input>
-<div id="root"></div>
+<div id="grid"></div>
 `;
 
 class GameOfLife extends HTMLElement {
@@ -36,20 +36,19 @@ class GameOfLife extends HTMLElement {
         let grid = Array(25*25).fill(0);
         let playingInterval;
 
-        const root = shadowRoot.getElementById("root");
         const generateButton = shadowRoot.getElementById("generate");
         const playButton = shadowRoot.getElementById("play");
         const pauseButton = shadowRoot.getElementById("pause");
         const tickButton = shadowRoot.getElementById("ticker");
         const widthElem = shadowRoot.getElementById("width");
 
-        rerender();
-
         generateButton.onclick = handleGenerate;
         playButton.onclick = handlePlay;
         pauseButton.onclick = handlePause;
         tickButton.onclick = handleTick;
         widthElem.onchange = handleWidthChange;
+
+        rerender();
 
         function handleGenerate() {
             for (let i = 0; i < grid.length; i++) {
@@ -89,15 +88,24 @@ class GameOfLife extends HTMLElement {
         function rerender() {
             const cellSize = 20;
             const width = Math.sqrt(grid.length);
-            let htmlGrid = `<div class="grid" style="width:${cellSize*width}px">`;
+
+            const htmlGrid = shadowRoot.getElementById("grid");
+            htmlGrid.innerHTML = "";
+            htmlGrid.classList.add("grid");
+            htmlGrid.style.width = `${cellSize*width}px`
+
             for (let i = 0; i < grid.length; i++) {
-                htmlGrid += `<div id="${i}" class="cell ${grid[i] && 'alive'}"></div>`
+                const cell = document.createElement("span");
+                cell.id = i;
+                cell.classList.add("cell");
+                if (grid[i]) {
+                    cell.classList.add("alive");
+                }
+                htmlGrid.append(cell);
             }
-            htmlGrid += "</div>";
-            root.innerHTML = htmlGrid;
 
             widthElem.value = width;
-            document.querySelectorAll('.cell').forEach(elem => elem.addEventListener('click', handleCellClick));
+            shadowRoot.querySelectorAll('.cell').forEach(elem => elem.addEventListener('click', handleCellClick));
         }
     }
 }
