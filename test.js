@@ -4,34 +4,34 @@ test();
 
 function test() {
     const tests = [
-        [[0], [0], {width: 1}],
-        [[1], [0], {width: 1}],
+        [[0], [0]],
+        [[1], [0]],
         [[0,0
          ,0,0],
          [0,0
-         ,0,0], {width: 2}],
+         ,0,0]],
         [[1,1
          ,0,1],
          [1,1
-         ,1,1], {width: 2}],
+         ,1,1]],
         [[0,0,0
          ,0,1,0
          ,0,0,0],
          [0,0,0
          ,0,0,0
-         ,0,0,0], {width: 3}],
+         ,0,0,0]],
         [[0,1,0
          ,0,1,1
          ,0,0,0],
          [0,1,1
          ,0,1,1
-         ,0,0,0], {width: 3}],
+         ,0,0,0]],
         [[0,1,0
          ,1,1,1
          ,1,0,0],
          [1,1,1
          ,1,0,1
-         ,1,0,0], {width: 3}],
+         ,1,0,0]],
         [[0,1,0,0
          ,0,0,0,1
          ,1,1,1,1
@@ -39,10 +39,10 @@ function test() {
          [0,0,0,0
          ,1,0,0,1
          ,1,0,0,1
-         ,1,0,1,1], {width: 4}],
+         ,1,0,1,1]],
     ];
-    for (let [input, expected, {width}] of tests) {
-        const res = tick(input, width);
+    for (let [input, expected] of tests) {
+        const res = tick(input);
         const passed = compare(res, expected);
         if (passed) {
             console.info("PASS");
