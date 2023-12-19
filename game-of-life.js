@@ -27,86 +27,86 @@ template.innerHTML = `
 `;
 
 class GameOfLife extends HTMLElement {
+    grid = Array(25*25).fill(0);
+    playingInterval;
+
     constructor() {
         super();
 
-        const shadowRoot = this.attachShadow({mode: 'open'});
-        shadowRoot.appendChild(template.content.cloneNode(true));
+        this.attachShadow({mode: 'open'});
+        this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        let grid = Array(25*25).fill(0);
-        let playingInterval;
+        this.generateButton = this.shadowRoot.getElementById("generate");
+        this.playButton = this.shadowRoot.getElementById("play");
+        this.pauseButton = this.shadowRoot.getElementById("pause");
+        this.tickButton = this.shadowRoot.getElementById("ticker");
+        this.widthElem = this.shadowRoot.getElementById("width");
 
-        const generateButton = shadowRoot.getElementById("generate");
-        const playButton = shadowRoot.getElementById("play");
-        const pauseButton = shadowRoot.getElementById("pause");
-        const tickButton = shadowRoot.getElementById("ticker");
-        const widthElem = shadowRoot.getElementById("width");
+        this.generateButton.onclick = this.handleGenerate.bind(this);
+        this.playButton.onclick = this.handlePlay.bind(this);
+        this.pauseButton.onclick = this.handlePause.bind(this);
+        this.tickButton.onclick = this.handleTick.bind(this);
+        this.widthElem.onchange = this.handleWidthChange.bind(this);
 
-        generateButton.onclick = handleGenerate;
-        playButton.onclick = handlePlay;
-        pauseButton.onclick = handlePause;
-        tickButton.onclick = handleTick;
-        widthElem.onchange = handleWidthChange;
+        this.render();
+    }
 
-        rerender();
+    handleGenerate() {
+        for (let i = 0; i < this.grid.length; i++) {
+            this.grid[i] = Math.round(Math.random());
+        }
+        this.render();
+    }
 
-        function handleGenerate() {
-            for (let i = 0; i < grid.length; i++) {
-                grid[i] = Math.round(Math.random());
+    handlePlay() {
+        if (this.playingInterval) return;
+        this.playingInterval = setInterval(this.handleTick.bind(this), 500);
+    }
+
+    handlePause() {
+        if (this.playingInterval) {
+            clearInterval(this.playingInterval);
+            this.playingInterval = undefined;
+        }
+    }
+
+    handleTick() {
+        this.grid = tick.call(this, this.grid);
+        this.render();
+    }
+
+    handleWidthChange(e) {
+        const width = e.target.value;
+        this.grid = Array(width*width).fill(0);
+        this.render();
+    }
+
+    handleCellClick(e) {
+        this.grid[e.target["id"]] = this.grid[e.target["id"]] === 0 ? 1 : 0;
+        this.render();
+    }
+
+    render() {
+        const cellSize = 20;
+        const width = Math.sqrt(this.grid.length);
+
+        const htmlGrid = this.shadowRoot.getElementById("grid");
+        htmlGrid.innerHTML = "";
+        htmlGrid.classList.add("grid");
+        htmlGrid.style.width = `${cellSize*width}px`
+
+        for (let i = 0; i < this.grid.length; i++) {
+            const cell = document.createElement("span");
+            cell.id = i;
+            cell.classList.add("cell");
+            if (this.grid[i]) {
+                cell.classList.add("alive");
             }
-            rerender();
+            htmlGrid.append(cell);
         }
 
-        function handlePlay() {
-            if (playingInterval) return;
-            playingInterval = setInterval(handleTick, 500);
-        }
-
-        function handlePause() {
-            if (playingInterval) {
-                clearInterval(playingInterval);
-                playingInterval = undefined;
-            }
-        }
-
-        function handleTick() {
-            grid = tick(grid)
-            rerender();
-        }
-
-        function handleWidthChange(e) {
-            const width = e.target.value;
-            grid = Array(width*width).fill(0);
-            rerender();
-        }
-
-        function handleCellClick(e) {
-            grid[e.target["id"]] = grid[e.target["id"]] === 0 ? 1 : 0;
-            rerender();
-        }
-
-        function rerender() {
-            const cellSize = 20;
-            const width = Math.sqrt(grid.length);
-
-            const htmlGrid = shadowRoot.getElementById("grid");
-            htmlGrid.innerHTML = "";
-            htmlGrid.classList.add("grid");
-            htmlGrid.style.width = `${cellSize*width}px`
-
-            for (let i = 0; i < grid.length; i++) {
-                const cell = document.createElement("span");
-                cell.id = i;
-                cell.classList.add("cell");
-                if (grid[i]) {
-                    cell.classList.add("alive");
-                }
-                htmlGrid.append(cell);
-            }
-
-            widthElem.value = width;
-            shadowRoot.querySelectorAll('.cell').forEach(elem => elem.addEventListener('click', handleCellClick));
-        }
+        this.widthElem.value = width;
+        this.shadowRoot.querySelectorAll('.cell').forEach(elem => elem.addEventListener('click', this.handleCellClick.bind(this)));
     }
 }
 
