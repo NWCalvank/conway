@@ -27,7 +27,9 @@ template.innerHTML = `
 `;
 
 class GameOfLife extends HTMLElement {
+    /** @type {Array<number>} */
     grid = Array(25*25).fill(0);
+    /** @type {number|undefined} */
     playingInterval;
 
     constructor() {
@@ -39,8 +41,8 @@ class GameOfLife extends HTMLElement {
         this.generateButton = this.shadowRoot.getElementById("generate");
         this.playButton = this.shadowRoot.getElementById("play");
         this.pauseButton = this.shadowRoot.getElementById("pause");
-        this.tickButton = this.shadowRoot.getElementById("ticker");
-        this.widthElem = this.shadowRoot.getElementById("width");
+        this.tickButton = this.shadowRoot.getElementById("ticker"); 
+        this.widthElem = (this.shadowRoot.getElementById("width"));
 
         this.generateButton.onclick = this.handleGenerate.bind(this);
         this.playButton.onclick = this.handlePlay.bind(this);
@@ -75,17 +77,22 @@ class GameOfLife extends HTMLElement {
         this.render();
     }
 
+    /** @param {Event & { target: HTMLInputElement }} e */
     handleWidthChange(e) {
-        const width = e.target.value;
+        const width = +e.target.value;
         this.grid = Array(width*width).fill(0);
         this.render();
     }
 
+    /** @param {Event & { target: HTMLInputElement }} e */
     handleCellClick(e) {
         this.grid[e.target["id"]] = this.grid[e.target["id"]] === 0 ? 1 : 0;
         this.render();
     }
 
+    /**
+     * Write current grid state to the DOM
+     */
     render() {
         const cellSize = 20;
         const width = Math.sqrt(this.grid.length);
@@ -97,7 +104,7 @@ class GameOfLife extends HTMLElement {
 
         for (let i = 0; i < this.grid.length; i++) {
             const cell = document.createElement("span");
-            cell.id = i;
+            cell.id = `${i}`;
             cell.classList.add("cell");
             if (this.grid[i]) {
                 cell.classList.add("alive");
@@ -105,7 +112,9 @@ class GameOfLife extends HTMLElement {
             htmlGrid.append(cell);
         }
 
-        this.widthElem.value = width;
+        if (this.widthElem instanceof HTMLInputElement) {
+            this.widthElem.value = `${width}`;
+        }
         this.shadowRoot.querySelectorAll('.cell').forEach(elem => elem.addEventListener('click', this.handleCellClick.bind(this)));
     }
 }

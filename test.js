@@ -3,6 +3,8 @@ import { tick } from './logic.js';
 test();
 
 function test() {
+    console.info("Running tests...");
+
     const tests = [
         [[0], [0]],
         [[1], [0]],
@@ -48,10 +50,13 @@ function test() {
             console.info("PASS");
         }
     }
-
-
 }
 
+/**
+ * Compare expected to actual
+ * @param {Array<number>} grid1 - The actual grid.
+ * @param {Array<number>} grid2 - The expected grid.
+ */
 function compare(grid1, grid2) {
     const sameLength = grid1.length === grid2.length;
     if (!sameLength) {

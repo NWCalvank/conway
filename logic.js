@@ -1,3 +1,9 @@
+/**
+ * Computes living or dead state for a single cell
+ * @param {Array<number>} grid - The grid to mutate.
+ * @param {number} pos - The position of the cell for which to compute next generation.
+ * @returns {boolean} Whether the cell is alive in the next generation.
+ */
 function nextGeneration(grid, pos) {
     const alive = grid[pos];
     const width = Math.sqrt(grid.length);
@@ -55,9 +61,14 @@ function nextGeneration(grid, pos) {
     return [2, 3].includes(neighbours);
 }
 
+/**
+ * Iterate entire grid by one generation.
+ * @param {Array<number>} prev - The grid from which to compute the next generation.
+ * @returns {Array<number>} A new grid representing the next generation.
+ */
 export function tick(prev) {
     const grid = Array(prev.length).fill(0);
-    for (let i in prev) {
+    for (let i = 0; i < prev.length; i++) {
         grid[i] = +nextGeneration(prev, i);
     }
 
