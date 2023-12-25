@@ -1,12 +1,17 @@
 {
   "name": "conway",
   "version": "1.0.0",
-  "description": "",
+  "description": "Unstyled Conway's Game of Life Web Component",
   "main": "game-of-life.js",
   "type": "module",
   "scripts": {
+    "check": "tsc -p jsconfig.json",
+    "pretest": "npm run check",
     "test": "node test.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  } 
 }
