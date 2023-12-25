@@ -2,10 +2,5 @@
   "compilerOptions": {
     "checkJs": true,
     "target": "esnext"
-  },
-  "files": [
-    "test.js",
-    "logic.js",
-    "game-of-life.js"
-  ]
+  }
 }
