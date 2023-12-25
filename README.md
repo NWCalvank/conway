@@ -5,6 +5,7 @@ Component](https://developer.mozilla.org/en-US/docs/Web/API/Web_components) for
 fun.
 
 To run it, install [serve](https://www.npmjs.com/package/serve) and then run:
+
 ```
 serve .
 ```
@@ -12,6 +13,7 @@ serve .
 Navigate to http://localhost:3000
 
 To run tests, install the dependencies (`npm i`) and then run:
+
 ```
 npm test
 ```
